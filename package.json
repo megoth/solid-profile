@@ -1,0 +1,47 @@
+{
+  "name": "solid-profile",
+  "version": "0.0.1",
+  "description": "A Solid app that allows you to change the data in your WebID profile",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megoth/solid-profile.git"
+  },
+  "keywords": [
+    "Solid"
+  ],
+  "author": "Arne Hassel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/megoth/solid-profile/issues"
+  },
+  "homepage": "https://github.com/megoth/solid-profile#readme",
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.7"
+  },
+  "dependencies": {
+    "@ldo/solid-react": "^0.0.1-alpha.17",
+    "bulma": "^0.9.4",
+    "clsx": "^2.0.0",
+    "ldo": "^1.0.3",
+    "ldo-solid-profile": "^0.0.13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.0",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.20.1"
+  }
+}
