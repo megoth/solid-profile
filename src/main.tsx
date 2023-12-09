@@ -5,12 +5,17 @@ import Frontpage from "./components/frontpage";
 import Layout from "./components/layout";
 import {BrowserSolidLdoProvider} from '@ldo/solid-react';
 import "bulma/css/bulma.min.css"
+import Profile from "./components/profile";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout/>,
         children: [
+            {
+                path: "/:webId",
+                element: <Profile/>,
+            },
             {
                 index: true,
                 element: <Frontpage/>,
