@@ -4,6 +4,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Frontpage from "./components/frontpage";
 import Layout from "./components/layout";
 import {BrowserSolidLdoProvider} from '@ldo/solid-react';
+import "bulma/css/bulma.min.css"
 
 const router = createBrowserRouter([
     {

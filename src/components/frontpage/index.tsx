@@ -3,6 +3,7 @@ import Login from "../login";
 import Content from "../content";
 import {SolidProfileShapeType} from "ldo-solid-profile";
 import Loading from "../loading";
+import LogoutButton from "../logout-button";
 
 export default function Frontpage() {
     const {session: {isLoggedIn, webId}, login} = useSolidAuth();
@@ -11,13 +12,11 @@ export default function Frontpage() {
     if (webId && profileResource?.isLoading()) {
         return <Loading/>
     }
-    if (!isLoggedIn) {
-        return <Login login={login}/>
-    }
     return <>
         <Content>
             <h1>Hello Solid World!</h1>
         </Content>
         {webId && <div>Hello, {profile?.name || webId}</div>}
+        {isLoggedIn ? <LogoutButton /> : <Login login={login}/>}
     </>
 }
