@@ -1,0 +1,27 @@
+.content.content {
+    & h1,
+    & h2,
+    & h3,
+    & h4,
+    & h5,
+    & h6 {
+        margin-top: 3em;
+        margin-bottom: 0.75rem;
+    }
+
+    :global(ul ul) {
+        margin-top: 0;
+    }
+
+    > :global(blockquote) > *:first-child {
+        margin-top: 0;
+    }
+
+    :global(.image) {
+        margin-bottom: 1em;
+    }
+
+    :global(.table-container) {
+        margin-top: 1.5rem;
+    }
+}
