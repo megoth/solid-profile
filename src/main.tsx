@@ -6,6 +6,7 @@ import Layout from "./components/layout";
 import {BrowserSolidLdoProvider} from '@ldo/solid-react';
 import "bulma/css/bulma.min.css"
 import Profile from "./components/profile";
+import {ModalContextProvider} from "./hooks/use-modal/provider.tsx";
 
 const router = createBrowserRouter([
     {
@@ -27,7 +28,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <BrowserSolidLdoProvider>
-            <RouterProvider router={router}/>
+            <ModalContextProvider>
+                <RouterProvider router={router}/>
+            </ModalContextProvider>
         </BrowserSolidLdoProvider>
     </React.StrictMode>,
 )

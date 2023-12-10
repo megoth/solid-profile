@@ -1,0 +1,33 @@
+.homeLink {
+    align-items: center;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.nameBig {
+    display: none;
+
+    @media screen and (min-width: 1024px) {
+        display: inherit;
+    }
+}
+
+.nameSmall {
+    @media screen and (min-width: 1024px) {
+        display: none;
+    }
+}
+
+.navbar.navbar {
+    :global(.container) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    :global(.navbar-item) {
+        align-items: center;
+        display: flex;
+        gap: 0.5rem;
+    }
+}

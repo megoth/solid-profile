@@ -2,14 +2,13 @@ import {PROVIDERS} from "../../constants";
 import styles from "./style.module.css"
 import {clsx} from "clsx";
 import {HTMLAttributes} from "react";
-import {LoginOptions} from "@ldo/solid-react/src/SolidAuthContext.ts";
+import {LoginOptions} from "@ldo/solid-react";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
     login: (issuer: string, loginOptions?: LoginOptions) => Promise<void>,
-    redirectId?: string;
 }
 
-export default function Login({className, login, redirectId, ...props}: Props) {
+export default function Login({className, login, ...props}: Props) {
     const onCustomProviderClick = async () => {
         const providerUrl = prompt("Please provide Solid Provider URL");
         if (!providerUrl || !(new URL(providerUrl).href)) return;

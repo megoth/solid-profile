@@ -1,11 +1,10 @@
-import Content from "../content";
 import {useSolidAuth} from "@ldo/solid-react";
+import {HTMLAttributes} from "react";
+import {clsx} from "clsx";
 
-export default function LogoutButton() {
+export default function LogoutButton({className, ...props}: HTMLAttributes<HTMLButtonElement>) {
     const {logout} = useSolidAuth();
     return (
-        <Content>
-            <button className="button is-small" onClick={logout}>Log out</button>
-        </Content>
+        <button className={clsx("button is-small", className)} onClick={logout} {...props}>Log out</button>
     )
 }

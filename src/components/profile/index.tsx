@@ -1,24 +1,17 @@
-import {useResource, useSolidAuth, useSubject} from "@ldo/solid-react";
+import {useResource, useSubject} from "@ldo/solid-react";
 import Loading from "../loading";
 import Content from "../content";
-import LogoutButton from "../logout-button";
-import Login from "../login";
 import {NavLink, useParams} from "react-router-dom";
 import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes";
 
 export default function Profile() {
     const {webId} = useParams();
-    const {session: {isLoggedIn}, login} = useSolidAuth();
     const profileResource = useResource(webId);
     const profile = useSubject(SolidProfileShapeType, webId);
     if (webId && profileResource?.isLoading()) {
         return <Loading/>
     }
     return <>
-        <Content>
-            <h1>Profile of {profile?.name || profile?.fn || webId}</h1>
-        </Content>
-        {isLoggedIn ? <LogoutButton/> : <Login login={login}/>}
         <div className="field">
             <label className="label">Name</label>
             <div className="control">
