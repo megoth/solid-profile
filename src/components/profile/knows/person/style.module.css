@@ -1,0 +1,16 @@
+.image {
+    width: auto;
+    max-height: 48px;
+    max-width: 48px;
+    overflow: hidden;
+}
+
+.mediaContent {
+    overflow: hidden;
+}
+
+.webId.webId {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

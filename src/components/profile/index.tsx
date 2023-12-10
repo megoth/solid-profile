@@ -1,6 +1,5 @@
 import {useLdo, useResource, useSolidAuth, useSubject} from "@ldo/solid-react";
 import Loading from "../loading";
-import Content from "../content";
 import {NavLink, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes";
 import styles from "./style.module.css";
@@ -11,6 +10,7 @@ import {PROFILE_FORM_DATA} from "../../constants";
 import {useEffect, useState} from "react";
 import ErrorMessage from "../error-message";
 import ProfilePhoto from "./photo";
+import ProfileKnows from "./knows";
 
 export default function Profile() {
     const {webId} = useParams();
@@ -63,7 +63,7 @@ export default function Profile() {
     }
 
     return <form onSubmit={handleSubmit(onSubmit)}>
-        {webId && ownProfile && (
+        {webId && session.isLoggedIn && ownProfile && (
             searchParams.has("edit")
                 ? <div className={clsx("message", {
                     "is-info": !isDirty,
@@ -99,17 +99,9 @@ export default function Profile() {
         </div>
         <div className="field">
             <label className="label">Knows</label>
-            <Content className="control">
-                {profile?.knows?.length! > 0
-                    ? <ul>
-                        {profile?.knows?.map((person) => (
-                            <li key={`knows-${person["@id"]}`}>
-                                <NavLink to={`/${encodeURIComponent(person["@id"])}`}>{person["@id"]}</NavLink>
-                            </li>
-                        ))}
-                    </ul>
-                    : <div>Not listed anyone yet</div>}
-            </Content>
+            <div className="control">
+                <ProfileKnows value={profile?.knows} />
+            </div>
         </div>
     </form>
 }

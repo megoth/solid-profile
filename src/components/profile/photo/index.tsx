@@ -33,5 +33,5 @@ export default function ProfilePhoto({value}: Props) {
                 </li>
             ))}
         </Grid>
-        : <div>No photo uploaded</div>
+        : <div>No photos listed</div>
 }
