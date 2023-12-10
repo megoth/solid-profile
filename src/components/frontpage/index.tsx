@@ -3,9 +3,10 @@ import Content from "../content";
 import Loading from "../loading";
 import {NavLink} from "react-router-dom";
 import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes.ts";
+import FrontpageBody from "./index.mdx";
 
 export default function Frontpage() {
-    const {session: { webId}} = useSolidAuth();
+    const {session: {isLoggedIn, webId}} = useSolidAuth();
     const profileResource = useResource(webId);
     const profile = useSubject(SolidProfileShapeType, webId);
     if (webId && profileResource?.isLoading()) {
@@ -13,8 +14,8 @@ export default function Frontpage() {
     }
     return <>
         <Content>
-            <h1>Hello Solid World!</h1>
-            {webId && <>
+            <FrontpageBody />
+            {isLoggedIn && webId && <>
                 <p>Hello, {profile?.name || webId}</p>
                 <p>Go to <NavLink to={`/${encodeURIComponent(webId)}`}>your profile</NavLink></p>
             </>}

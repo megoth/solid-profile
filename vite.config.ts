@@ -1,18 +1,14 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
+import mdx from '@mdx-js/rollup'
 
 // https://vitejs.dev/config/
 // @ts-ignore
-export default defineConfig(() => { // {command}
-    // if (command === "serve") { //dev config
-    //     return {
-    //         ...baseConfig,
-    //     }
-    // }
+export default defineConfig(() => {
     return {
         plugins: [
-            {enforce: 'pre'},
             react(),
+            mdx(),
         ],
     };
 })
