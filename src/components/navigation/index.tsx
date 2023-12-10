@@ -21,14 +21,16 @@ export default function Navigation() {
                     </NavLink>
                 </div>
                 {isLoggedIn && webId && !profileResource?.isLoading() && <div className="navbar-start">
-                    <span className="navbar-item">
-                        <span className={styles.nameBig}>You're logged in as {profile?.name}</span>
-                        <span className={styles.nameSmall}>{profile?.name}</span>
+                    <NavLink to={`/${encodeURIComponent(webId)}`} className={clsx("navbar-item", styles.nameSmall)}>
+                        {profile?.name}
+                    </NavLink>
+                    <span className={clsx("navbar-item", styles.nameBig)}>
+                        You're logged in as <NavLink to={`/${encodeURIComponent(webId)}`}>{profile?.name}</NavLink>
                     </span>
                 </div>}
                 <div className="navbar-end">
                     <span className="navbar-item">
-                        {isLoggedIn ? <LogoutButton /> : <LoginButton/>}
+                        {isLoggedIn ? <LogoutButton/> : <LoginButton/>}
                     </span>
                 </div>
             </div>
