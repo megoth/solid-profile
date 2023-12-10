@@ -4,14 +4,20 @@ import {useResource, useSubject} from "@ldo/solid-react";
 import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 import styles from "./style.module.css";
 import {NavLink} from "react-router-dom";
+import Loading from "../../../loading";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
     webId: string
 }
 
 export default function ProfileKnowsPerson({children, className, webId, ...props}: Props) {
-    useResource(webId);
+    const profileResource = useResource(webId);
     const profile = useSubject(SolidProfileShapeType, webId);
+
+    if (profileResource?.isDoingInitialFetch()) {
+        return <Loading/>
+    }
+
     return (
         <NavLink to={`/${encodeURIComponent(webId)}`}>
             <div className={clsx("card", className)} {...props}>

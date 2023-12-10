@@ -17,7 +17,7 @@ export default function Profile() {
     const [searchParams] = useSearchParams();
     const {session} = useSolidAuth();
     const {commitData, changeData, createData} = useLdo();
-    const profileResource = useResource(webId);
+    const profileResource = useResource(webId, {reloadOnMount: true});
     const profile = useSubject(SolidProfileShapeType, webId);
     const [values, setValues] = useState({
         name: ""
@@ -46,7 +46,7 @@ export default function Profile() {
         return <ErrorMessage error={compoundedError} />
     }
 
-    if (webId && profileResource?.isLoading()) {
+    if (profileResource?.isDoingInitialFetch()) {
         return <Loading/>
     }
 
