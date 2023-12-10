@@ -46,7 +46,7 @@ export default function Profile() {
         return <ErrorMessage error={compoundedError} />
     }
 
-    if (profileResource?.isDoingInitialFetch()) {
+    if (!profile || profileResource?.isDoingInitialFetch()) {
         return <Loading/>
     }
 
@@ -63,10 +63,13 @@ export default function Profile() {
     }
 
     return <form onSubmit={handleSubmit(onSubmit)}>
+        {!session.isLoggedIn && <div className="message is-danger">
+            <div className="message-body">You're not able to save any changes since you're not authenticated.</div>
+        </div>}
         {webId && session.isLoggedIn && ownProfile && (
             searchParams.has("edit")
                 ? <div className={clsx("message", {
-                    "is-info": !isDirty,
+                    "is-text": !isDirty,
                     "is-primary": isDirty
                 })}>
                     <div className={clsx("message-body", styles.messageBody)}>
@@ -100,7 +103,7 @@ export default function Profile() {
         <div className="field">
             <label className="label">Knows</label>
             <div className="control">
-                <ProfileKnows value={profile?.knows} />
+                <ProfileKnows profile={profile} profileResource={profileResource} value={profile?.knows} />
             </div>
         </div>
     </form>

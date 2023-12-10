@@ -4,11 +4,11 @@ export interface ModalModel extends ReactElement {
 }
 
 const ModalContext = createContext<{
-    modal: ModalModel | null;
-    setModal: (node: ModalModel) => void;
+    close: () => void;
+    openModal: (node: ModalModel) => void;
 }>({
-    modal: null,
-    setModal: () => undefined,
+    close: () => undefined,
+    openModal: () => undefined,
 });
 
 export default ModalContext;

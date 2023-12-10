@@ -1,0 +1,73 @@
+import {useForm} from "react-hook-form";
+import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
+import {useState} from "react";
+import {useLdo} from "@ldo/solid-react";
+import useModal from "../../../../hooks/use-modal";
+import ErrorMessage from "../../../error-message";
+import Loading from "../../../loading";
+import {SolidProfile} from "../../../../ldo/profile.typings.ts";
+import {useResource} from "@ldo/solid-react/src/useResource.ts";
+
+interface Props {
+    profile: SolidProfile
+    profileResource: ReturnType<typeof useResource>
+}
+
+interface AddWebIdFormData {
+    webId: string
+}
+
+export default function ProfileKnowsModal({profile, profileResource}: Props) {
+    const {close} = useModal();
+    const {commitData, changeData, createData} = useLdo();
+    const [values, setValues] = useState({
+        webId: ""
+    });
+    const {
+        register,
+        handleSubmit,
+        formState: {errors}
+    } = useForm<AddWebIdFormData>({
+        values
+    });
+    const [error, setError] = useState<Error | null>(null);
+    const [isSyncing, setIsSyncing] = useState(false);
+
+    if (error) {
+        return <ErrorMessage error={error} />
+    }
+
+    if (profileResource?.isDoingInitialFetch()) {
+        return <Loading />
+    }
+
+    const onSubmit = async (data: AddWebIdFormData) => {
+        if (isSyncing || !profileResource) return;
+        setIsSyncing(true);
+        const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
+        const updatedProfile = changeData(oldProfile, profileResource);
+        updatedProfile.knows = [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
+        await commitData(updatedProfile).catch(setError);
+        setValues({webId: ""});
+        setIsSyncing(false);
+        close();
+    }
+
+    return <form onSubmit={handleSubmit(onSubmit)} onReset={close} className="box">
+        <div className="field">
+            <label className="label">WebID</label>
+            <div className="control">
+                <input className="input" {...register("webId", {required: true})} placeholder={"Please add valid URL"}/>
+            </div>
+            {errors.webId && <p className="help is-danger">WebID is required</p>}
+        </div>
+        <div className="field is-grouped">
+            <div className="control">
+                <button className="button is-primary" type="submit">Submit</button>
+            </div>
+            <div className="control">
+                <button className="button is-secondary" type="reset">Cancel</button>
+            </div>
+        </div>
+    </form>
+}

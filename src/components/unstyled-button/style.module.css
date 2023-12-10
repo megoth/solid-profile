@@ -1,0 +1,12 @@
+.button.button.button.button {
+    background-color: transparent;
+    border: 0;
+    font-size: 1rem;
+    display: inline-block;
+    height: auto;
+    justify-content: revert;
+    padding: 0;
+    text-align: start;
+    white-space: revert;
+    width: 100%;
+}

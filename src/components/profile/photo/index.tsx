@@ -10,11 +10,11 @@ interface Props {
 }
 
 export default function ProfilePhoto({value}: Props) {
-    const {setModal} = useModal();
+    const {openModal} = useModal();
 
     const handleClick = (url: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
-        setModal(<ProfilePhotoModal src={url} />);
+        openModal(<ProfilePhotoModal src={url} />);
     }
 
     return value && value.length > 0
