@@ -10,6 +10,7 @@ import {useForm} from "react-hook-form";
 import {PROFILE_FORM_DATA} from "../../constants";
 import {useEffect, useState} from "react";
 import ErrorMessage from "../error-message";
+import ProfilePhoto from "./photo";
 
 export default function Profile() {
     const {webId} = useParams();
@@ -92,17 +93,9 @@ export default function Profile() {
         </div>
         <div className="field">
             <label className="label">Photo</label>
-            <Content className="control">
-                {profile?.hasPhoto?.length! > 0
-                    ? <ul>
-                        {profile?.hasPhoto.map((photo) => (
-                            <li key={`photo-${photo["@id"]}`}>
-                                <img src={photo["@id"]} alt={`Photo of ${webId}`}/>
-                            </li>
-                        ))}
-                    </ul>
-                    : <div>No photo uploaded</div>}
-            </Content>
+            <div className="control">
+                <ProfilePhoto value={profile?.hasPhoto} />
+            </div>
         </div>
         <div className="field">
             <label className="label">Knows</label>
