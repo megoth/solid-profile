@@ -1,6 +1,8 @@
 import {HTMLAttributes} from "react";
 import styles from "./style.module.css";
 import {clsx} from "clsx";
+import {NavLink} from "react-router-dom";
+import {AUTHOR_WEBID} from "../../../constants.ts";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
 }
@@ -13,7 +15,7 @@ export default function Footer({className, ...props}: Props) {
                     <a href="https://github.com/megoth/solid-profile">GitHub repo</a>
                 </div>
                 <div className={styles.footerItem}>
-                    <a href="https://icanhasweb.net">Coded by Arne Hassel</a>
+                    <NavLink to={`/${encodeURIComponent(AUTHOR_WEBID)}`}>Coded by Arne Hassel</NavLink>
                 </div>
             </nav>
         </footer>

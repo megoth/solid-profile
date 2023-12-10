@@ -1,3 +1,5 @@
+export const AUTHOR_WEBID = "https://megothcapgemini.solidcommunity.net/profile/card#me";
+
 interface Provider {
     label: string;
     logoSrc: string;
