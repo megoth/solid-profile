@@ -5,23 +5,22 @@ import {useLdo} from "@ldo/solid-react";
 import useModal from "../../../../hooks/use-modal";
 import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
-import {SolidProfile} from "../../../../ldo/profile.typings.ts";
-import {useResource} from "@ldo/solid-react/src/useResource.ts";
+import useProfileForm from "../../../../hooks/use-profile-form";
 
 interface Props {
-    profile: SolidProfile
-    profileResource: ReturnType<typeof useResource>
+    webId?: string | null
 }
 
 interface AddWebIdFormData {
     webId: string
 }
 
-export default function ProfileKnowsModal({profile, profileResource}: Props) {
+export default function ProfileKnowsModal({webId}: Props) {
+    const {profile, profileResource} = useProfileForm();
     const {close} = useModal();
     const {commitData, changeData, createData} = useLdo();
     const [values, setValues] = useState({
-        webId: ""
+        webId: webId || ""
     });
     const {
         register,
@@ -34,15 +33,15 @@ export default function ProfileKnowsModal({profile, profileResource}: Props) {
     const [isSyncing, setIsSyncing] = useState(false);
 
     if (error) {
-        return <ErrorMessage error={error} />
+        return <ErrorMessage error={error}/>
     }
 
     if (profileResource?.isDoingInitialFetch()) {
-        return <Loading />
+        return <Loading/>
     }
 
     const onSubmit = async (data: AddWebIdFormData) => {
-        if (isSyncing || !profileResource) return;
+        if (isSyncing || !profile || !profileResource) return;
         setIsSyncing(true);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);

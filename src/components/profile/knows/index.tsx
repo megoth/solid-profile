@@ -7,16 +7,12 @@ import {useSolidAuth} from "@ldo/solid-react";
 import UnstyledButton from "../../unstyled-button";
 import useModal from "../../../hooks/use-modal";
 import ProfileKnowsModal from "./modal";
-import {SolidProfile} from "../../../ldo/profile.typings.ts";
-import {useResource} from "@ldo/solid-react/src/useResource.ts";
 
 interface Props {
-    profile: SolidProfile
-    profileResource: ReturnType<typeof useResource>
     value: Array<{ "@id": string }> | undefined
 }
 
-export default function ProfileKnows({profile, profileResource, value}: Props) {
+export default function ProfileKnows({value}: Props) {
     const {webId} = useParams();
     const [searchParams] = useSearchParams();
     const {session} = useSolidAuth();
@@ -24,21 +20,21 @@ export default function ProfileKnows({profile, profileResource, value}: Props) {
     const {openModal} = useModal();
 
     const handleAddContact = () => {
-        openModal(<ProfileKnowsModal profile={profile} profileResource={profileResource}/>);
+        openModal(<ProfileKnowsModal/>);
     }
 
     return value && value.length > 0
         ? <Grid>
             {value.map((person) => (
                 <li key={`person-${person["@id"]}`}>
-                    <ProfileKnowsPerson webId={person["@id"]}/>
+                    <ProfileKnowsPerson webId={person["@id"]} ownProfile={ownProfile}/>
                 </li>
             ))}
             {ownProfile && searchParams.has("edit") && <li>
                 <UnstyledButton onClick={handleAddContact}>
                     <ProfileKnowsCard name={"Add new contact"}
                                       image={<BsFillPersonPlusFill/>} style={{fontSize: 32}}
-                                      webId={"By adding their WebID"}/>
+                                      webId={"By adding their WebID"} />
                 </UnstyledButton>
             </li>}
         </Grid>

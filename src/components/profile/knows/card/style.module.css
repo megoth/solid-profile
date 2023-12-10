@@ -1,3 +1,11 @@
+.cardFooterItem.cardFooterItem.cardFooterItem.cardFooterItem.cardFooterItem {
+    padding: 0.75rem;
+    text-align: center;
+    &:not(:last-child) {
+        border-right-width: 1px;
+    }
+}
+
 .image {
     max-height: 48px;
     overflow: hidden;
@@ -10,7 +18,10 @@
 }
 
 .webId.webId {
+    background-color: transparent;
+    font-size: 0.8rem;
     overflow: hidden;
+    padding: 0.25rem 0 0 0;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
