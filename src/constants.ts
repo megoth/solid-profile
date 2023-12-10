@@ -25,3 +25,7 @@ export const PROVIDERS: Array<Provider> = [
         signupIri: "https://inrupt.net/register",
     },
 ];
+
+export interface PROFILE_FORM_DATA {
+    name: string;
+}
