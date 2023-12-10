@@ -1,10 +1,10 @@
 import {useResource, useSolidAuth, useSubject} from "@ldo/solid-react";
 import Login from "../login";
 import Content from "../content";
-import {SolidProfileShapeType} from "ldo-solid-profile";
 import Loading from "../loading";
 import LogoutButton from "../logout-button";
 import {NavLink} from "react-router-dom";
+import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes.ts";
 
 export default function Frontpage() {
     const {session: {isLoggedIn, webId}, login} = useSolidAuth();
