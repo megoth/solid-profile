@@ -1,11 +1,15 @@
 import {clsx} from "clsx";
 import styles from "./style.module.css";
-import {HTMLAttributes, ReactNode} from "react";
+import {HTMLAttributes, ReactNode, useState} from "react";
 import UnstyledButton from "../../../unstyled-button";
 import ProfileKnowsModal from "../modal";
 import useModal from "../../../../hooks/use-modal";
 import {FaPencilAlt, FaTrash} from "react-icons/fa";
 import VerifyModal from "../../../verify-modal";
+import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
+import useProfile from "../../../../hooks/use-profile";
+import {useLdo} from "@ldo/solid-react";
+import ErrorMessage from "../../../error-message";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode
@@ -14,11 +18,26 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 export default function ProfileKnowsCard({canEdit, children, className, webId, ...props}: Props) {
-    const {openModal} = useModal();
+    const {profile, profileResource} = useProfile();
+    const {commitData, changeData, createData} = useLdo();
+    const {closeModal, openModal} = useModal();
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+
+    if (error) {
+        return <ErrorMessage error={error}/>
+    }
 
     const handleDelete = async (): Promise<void> => {
-        console.log(webId);
-        return new Promise((resolve) => resolve());
+        if (isSyncing || !profile || !profileResource) return;
+        setIsSyncing(true);
+        const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
+        const updatedProfile = changeData(oldProfile, profileResource);
+        if (!updatedProfile?.knows) return;
+        updatedProfile.knows = updatedProfile.knows.filter((person) => person["@id"] !== webId);
+        await commitData(updatedProfile).catch(setError);
+        setIsSyncing(false);
+        closeModal();
     }
 
     const handleDeleteInitiation = () => {
