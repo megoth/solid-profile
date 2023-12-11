@@ -1,15 +1,16 @@
 import {useForm} from "react-hook-form";
-import {useState} from "react";
+import {ReactNode, useState} from "react";
 import useProfile from "../../hooks/use-profile";
 import useModal from "../../hooks/use-modal";
 import ErrorMessage from "../error-message";
 import Content from "../content";
 
 interface Props {
+    children?: ReactNode
     onSubmit: () => Promise<void>
 }
 
-export default function VerifyModal({onSubmit}: Props) {
+export default function VerifyModal({children, onSubmit}: Props) {
     const {profile, profileResource} = useProfile();
     const {closeModal} = useModal();
     const {handleSubmit} = useForm();
@@ -31,6 +32,7 @@ export default function VerifyModal({onSubmit}: Props) {
     return <form onSubmit={handleSubmit(intermediarySubmit)} onReset={closeModal} className="box">
         <Content>
             <h2 className="subtitle">Are you sure?</h2>
+            {children}
         </Content>
         <div className="field is-grouped">
             <div className="control">

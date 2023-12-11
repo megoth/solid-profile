@@ -14,7 +14,7 @@ export default function ProfilePhoto({value}: Props) {
         ? <Grid>
             {value.sort(sortById).map((photo) => (
                 <li key={`photo-${photo["@id"]}`}>
-                    <PhotoCard photo={photo}/>
+                    <PhotoCard photoUrl={photo["@id"]}/>
                 </li>
             ))}
             {canEdit && <li>
