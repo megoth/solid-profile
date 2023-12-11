@@ -45,7 +45,11 @@ export default function ProfileKnowsModal({webId}: Props) {
         setIsSyncing(true);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
-        updatedProfile.knows = [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
+        updatedProfile.knows = webId
+            ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
+                ? {"@id": data.webId}
+                : person)
+            : [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
         await commitData(updatedProfile).catch(setError);
         setValues({webId: ""});
         setIsSyncing(false);
