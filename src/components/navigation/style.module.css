@@ -30,4 +30,8 @@
         display: flex;
         gap: 0.5rem;
     }
+
+    :global(.navbar-end) {
+        margin-right: -0.75rem;
+    }
 }
