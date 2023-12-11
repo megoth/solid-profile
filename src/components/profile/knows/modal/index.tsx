@@ -6,6 +6,7 @@ import useModal from "../../../../hooks/use-modal";
 import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
 import useProfile from "../../../../hooks/use-profile";
+import {VALID_URL_PATTERN} from "../../../../constants.ts";
 
 interface Props {
     webId?: string | null
@@ -60,7 +61,10 @@ export default function ProfileKnowsModal({webId}: Props) {
         <div className="field">
             <label className="label">WebID</label>
             <div className="control">
-                <input className="input" {...register("webId", {required: true})} placeholder={"Please add valid URL"}/>
+                <input className="input" type={"url"} {...register("webId", {
+                    required: true,
+                    pattern: VALID_URL_PATTERN
+                })} placeholder={"Please add valid URL"}/>
             </div>
             {errors.webId && <p className="help is-danger">WebID is required</p>}
         </div>
