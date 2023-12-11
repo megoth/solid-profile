@@ -13,6 +13,7 @@ import ProfilePhoto from "./photo";
 import ProfileKnows from "./knows";
 import useProfile from "../../hooks/use-profile";
 import {useCopyToClipboard} from "../../hooks/use-copy-to-clipboard";
+import {BsClipboard2PlusFill} from "react-icons/bs";
 
 export default function Profile() {
     const {session} = useSolidAuth();
@@ -83,7 +84,7 @@ export default function Profile() {
                     <div className={clsx("message-body", styles.messageBody)}>
                         <span>This form automatically saves your progress.</span>
                         <NavLink to={`/${encodeURIComponent(profile["@id"])}`} className={clsx("button is-primary")}>
-                            Exit edit mode
+                            Leave edit mode
                         </NavLink>
                     </div>
                 </div>
@@ -93,7 +94,7 @@ export default function Profile() {
                     <div className={clsx("message-body", styles.messageBody)}>
                         <span>This is your profile.</span>
                         <NavLink to={`/${encodeURIComponent(profile["@id"])}?edit`}
-                                 className="button is-info">Edit</NavLink>
+                                 className="button is-info">Enter edit mode</NavLink>
                     </div>
                 </div>
             )}
@@ -106,7 +107,12 @@ export default function Profile() {
                         <ProfileTextField name="name" value={profile["@id"]} alwaysInput={true}/>
                     </div>
                     <div className="control">
-                        <button className="button" onClick={handleCopy}>Copy URL</button>
+                        <button className="button is-light" onClick={handleCopy}>
+                            <span className="icon is-small">
+                                <BsClipboard2PlusFill/>
+                            </span>
+                            <span>Copy URL</span>
+                        </button>
                     </div>
                 </div>
             </div>
