@@ -4,6 +4,7 @@ import {clsx} from "clsx";
 import styles from "./style.module.css";
 import useModal from "../../../hooks/use-modal";
 import ProfilePhotoModal from "./modal";
+import {sortById} from "../../../libs/array.ts";
 
 interface Props {
     value: Array<{"@id": string}> | undefined
@@ -19,7 +20,7 @@ export default function ProfilePhoto({value}: Props) {
 
     return value && value.length > 0
         ? <Grid>
-            {value.map((photo) => (
+            {value.sort(sortById).map((photo) => (
                 <li key={`photo-${photo["@id"]}`}>
                     <div className="card">
                         <div className="card-image">

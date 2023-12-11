@@ -8,6 +8,7 @@ import ProfileKnowsModal from "./modal";
 import useProfile from "../../../hooks/use-profile";
 import {clsx} from "clsx";
 import styles from "./person/style.module.css";
+import {sortById} from "../../../libs/array.ts";
 
 interface Props {
     value: Array<{ "@id": string }> | undefined
@@ -23,7 +24,7 @@ export default function ProfileKnows({value}: Props) {
 
     return value && value.length > 0
         ? <Grid>
-            {value.map((person) => (
+            {value.sort(sortById).map((person) => (
                 <li key={`person-${person["@id"]}`}>
                     <ProfileKnowsPerson webId={person["@id"]}/>
                 </li>
