@@ -50,7 +50,9 @@ export default function PhotoCard({photoUrl}: Props) {
         await photoResource.delete().catch(setError);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
-        updatedProfile.hasPhoto = updatedProfile.hasPhoto.filter((photo) => photo["@id"] !== photoUrl)
+        updatedProfile.hasPhoto = (updatedProfile.hasPhoto || []).filter((photo: {
+            "@id": string
+        }) => photo["@id"] !== photoUrl)
         await commitData(updatedProfile).catch(setError);
         setIsSyncing(false);
     }

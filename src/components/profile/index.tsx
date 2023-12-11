@@ -128,13 +128,13 @@ export default function Profile() {
                 </div>
                 {errors.name && <p className="help is-danger">Name is required</p>}
             </div>}
-            {(profile?.hasPhoto?.length > 0 || isOwner) && <div className="field">
+            {((profile?.hasPhoto || []).length > 0 || isOwner) && <div className="field">
                 <label className="label">Photo</label>
                 <div className="control">
                     <ProfilePhoto value={profile?.hasPhoto}/>
                 </div>
             </div>}
-            {(profile?.knows?.length > 0 || isOwner) && <div className="field">
+            {((profile?.knows || []).length > 0 || isOwner) && <div className="field">
                 <label className="label">Knows</label>
                 <div className="control">
                     <ProfileKnows value={profile?.knows}/>

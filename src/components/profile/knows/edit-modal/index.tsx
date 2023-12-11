@@ -48,10 +48,9 @@ export default function ProfileKnowsEditModal({webId}: Props) {
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
         if (webId) {
-            updatedProfile.knows = updatedProfile.knows
-                .map((person: {
-                    "@id": string
-                }) => person["@id"] === webId ? {"@id": data.webId} : person);
+            updatedProfile.knows = (updatedProfile.knows || []).map((person: {
+                "@id": string
+            }) => person["@id"] === webId ? {"@id": data.webId} : person);
         } else {
             updatedProfile.knows = [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
         }

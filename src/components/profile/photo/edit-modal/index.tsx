@@ -80,11 +80,11 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         const fullPhotoUri = container?.uri + newPhotoUri;
         if (photoUrl && photoResource) {
             await photoResource.delete().catch(setError);
-            updatedProfile.hasPhoto = updatedProfile.hasPhoto.map((photo: {
+            updatedProfile.hasPhoto = (updatedProfile.hasPhoto || []).map((photo: {
                 "@id": string
             }) => photo["@id"] !== photoUrl ? {"@id": fullPhotoUri} : photo);
         } else {
-            updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": fullPhotoUri}]
+            updatedProfile.hasPhoto = [...(updatedProfile.hasPhoto || []), {"@id": fullPhotoUri}]
         }
         await commitData(updatedProfile).catch(setError);
         setValues({photo: null});
