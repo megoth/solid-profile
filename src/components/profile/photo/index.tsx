@@ -10,16 +10,17 @@ interface Props {
 export default function ProfilePhoto({value}: Props) {
     const {canEdit} = useProfile();
 
-    return value && value.length > 0
-        ? <Grid>
-            {value.sort(sortById).map((photo) => (
-                <li key={`photo-${photo["@id"]}`}>
-                    <PhotoCard photoUrl={photo["@id"]}/>
-                </li>
-            ))}
-            {canEdit && <li>
-                <PhotoCard/>
-            </li>}
-        </Grid>
-        : <div>No photos listed</div>
+    return <>
+        {value && value.length > 0 && (
+            <Grid>
+                {value.sort(sortById).map((photo) => (
+                    <li key={`photo-${photo["@id"]}`}>
+                        <PhotoCard photoUrl={photo["@id"]}/>
+                    </li>
+                ))}
+                {canEdit && <li><PhotoCard/></li>}
+            </Grid>
+        )}
+        {value && value.length === 0 && (canEdit ? <PhotoCard/> : "No photos listed")}
+    </>
 }

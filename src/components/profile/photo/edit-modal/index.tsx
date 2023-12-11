@@ -44,7 +44,7 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         if (!profileResource) return;
         const parentContainer = profileResource.getParentContainer() as Container;
         if (!parentContainer || !parentContainer.uri) return;
-        parentContainer.createIfAbsent().then(() => setContainer(parentContainer)).catch(setError);
+        setContainer(parentContainer)
     }, [getResource, profileResource, session.webId]);
 
     if (error) {
@@ -60,7 +60,7 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
             return closeModal();
         }
         if (photoUrl && !photoResource) return;
-        if (isSyncing || !profile || !profileResource || !data.photo?.[0]) return;
+        if (isSyncing || !profile || !profileResource || !data.photo?.[0] || !container) return;
         setIsSyncing(true);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
@@ -69,7 +69,7 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
             crypto.randomUUID(),
             mime.getExtension(data.photo[0].type)
         ].join(".");
-        const result = await container?.uploadChildAndOverwrite(
+        const result = await container.uploadChildAndOverwrite(
             newPhotoUri as LeafUri,
             data.photo[0],
             data.photo[0].type
@@ -77,16 +77,16 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         if (!result || result.isError) {
             return setError(new Error(result?.message))
         }
-        if (photoResource) {
-            await photoResource.delete().catch(setError);
-        }
         const fullPhotoUri = container?.uri + newPhotoUri;
-        updatedProfile.hasPhoto = [
-            ...(photoUrl
-                ? updatedProfile.hasPhoto.filter((photo) => photo["@id"] !== photoUrl)
-                : updatedProfile.hasPhoto),
-            {"@id": fullPhotoUri}
-        ]
+        if (photoUrl && photoResource) {
+            await photoResource.delete().catch(setError);
+            updatedProfile.hasPhoto = [
+                ...updatedProfile.hasPhoto.filter((photo) => photo["@id"] !== photoUrl),
+                {"@id": fullPhotoUri}
+            ];
+        } else {
+            updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": fullPhotoUri}]
+        }
         await commitData(updatedProfile).catch(setError);
         setValues({photo: null});
         setIsSyncing(false);
