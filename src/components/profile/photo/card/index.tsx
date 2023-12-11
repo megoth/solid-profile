@@ -1,5 +1,5 @@
 import {clsx} from "clsx";
-import styles from "../style.module.css";
+import styles from "./style.module.css";
 import React, {useState} from "react";
 import ProfilePhotoViewModal from "../view-modal";
 import useModal from "../../../../hooks/use-modal";
@@ -69,10 +69,10 @@ export default function PhotoCard({photoUrl}: Props) {
     return (
         <div className="card">
             <div className="card-image">
-                <figure className={clsx("image", styles.image, {[styles.isIcon]: !photoUrl})}>
+                <figure className={clsx("image", styles.image, {[styles.isCentered]: !photoUrl})}>
                     {photoUrl
                         ? (
-                            <a href={photoUrl} onClick={handleViewPhoto(photoUrl)}>
+                            <a href={photoUrl} onClick={handleViewPhoto(photoUrl)} className={styles.isCentered}>
                                 <Image src={photoUrl}
                                        alt={`Photo of ${profile?.name || profile?.fn || profile?.["@id"]}`}/>
                             </a>
