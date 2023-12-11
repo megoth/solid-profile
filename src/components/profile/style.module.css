@@ -1,5 +1,13 @@
 .messageBody {
-    display: flex;
     align-items: center;
-    gap: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    text-align: center;
+
+    @media screen and (min-width: 600px) {
+        flex-direction: row;
+        gap: 0.5em;
+        text-align: left;
+    }
 }

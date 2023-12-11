@@ -1,6 +1,6 @@
 import {useLdo, useSolidAuth} from "@ldo/solid-react";
 import Loading from "../loading";
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes";
 import styles from "./style.module.css";
 import {clsx} from "clsx";
@@ -32,12 +32,11 @@ export default function Profile() {
         handleSubmit,
         formState: {errors, isDirty}
     } = useForm<PROFILE_FORM_DATA>({
-        values
+        values,
     });
     const [error, setError] = useState<Error | null>(null);
     const compoundedError = error || (profileResource?.isError ? new Error("Error loading resource") : null);
     const [isSyncing, setIsSyncing] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!profile) return;
@@ -63,7 +62,6 @@ export default function Profile() {
         await commitData(updatedProfile).catch(setError);
         setValues(data);
         setIsSyncing(false);
-        navigate(`/${encodeURIComponent(profile["@id"])}`);
     }
 
     return (
@@ -76,10 +74,10 @@ export default function Profile() {
             {profile["@id"] && session.isLoggedIn && canEdit && (
                 <div className={clsx("message", {"is-text": !isDirty, "is-primary": isDirty})}>
                     <div className={clsx("message-body", styles.messageBody)}>
-                        <span>Submit when you're done.</span>
-                        <button className={clsx("button is-primary")} type="submit" disabled={isSyncing}>
-                            Submit changes
-                        </button>
+                        <span>The form automatically saves your progress when you leave a field.</span>
+                        <NavLink to={`/${encodeURIComponent(profile["@id"])}`} className={clsx("button is-primary")}>
+                            Exit edit mode
+                        </NavLink>
                     </div>
                 </div>
             )}
