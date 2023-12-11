@@ -7,6 +7,7 @@ import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
 import useProfile from "../../../../hooks/use-profile";
 import {VALID_URL_PATTERN} from "../../../../constants.ts";
+import FormControls from "../../../form-controls";
 
 interface Props {
     webId?: string | null
@@ -68,13 +69,6 @@ export default function ProfileKnowsEditModal({webId}: Props) {
             </div>
             {errors.webId && <p className="help is-danger">WebID is required</p>}
         </div>
-        <div className="field is-grouped">
-            <div className="control">
-                <button className="button is-primary" type="submit">Submit</button>
-            </div>
-            <div className="control">
-                <button className="button is-secondary" type="reset">Cancel</button>
-            </div>
-        </div>
+        <FormControls disabled={isSyncing} />
     </form>
 }

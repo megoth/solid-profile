@@ -38,7 +38,9 @@ export default function ProfileKnowsCard({children, className, webId, ...props}:
     }
 
     const handleDeleteInitiation = () => {
-        openModal(<VerifyModal onSubmit={handleDeleteContact}/>, {small: true});
+        openModal(<VerifyModal onSubmit={handleDeleteContact}>
+            This will remove the contact from your profile.
+        </VerifyModal>, {small: true});
     }
 
     const handleEditContact = () => {

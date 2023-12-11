@@ -26,8 +26,8 @@ export default function ProfileKnowsPerson({className, webId, ...props}: Props) 
     }
 
     return (
-        <NavLink to={`/${encodeURIComponent(webId)}`}>
-            <ProfileKnowsCard className={clsx("card", className)} {...props} webId={webId}>
+        <ProfileKnowsCard className={clsx("card", className)} {...props} webId={webId}>
+            <NavLink to={`/${encodeURIComponent(webId)}`}>
                 <div className="media">
                     <div className="media-left">
                         <figure className={clsx("image", styles.image)}>
@@ -41,7 +41,7 @@ export default function ProfileKnowsPerson({className, webId, ...props}: Props) 
                     </pre>
                     </div>
                 </div>
-            </ProfileKnowsCard>
-        </NavLink>
+            </NavLink>
+        </ProfileKnowsCard>
     );
 }

@@ -8,6 +8,7 @@ import {Container, LeafUri} from "@ldo/solid";
 import {useLdo, useSolidAuth} from "@ldo/solid-react";
 import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 import mime from "mime";
+import FormControls from "../../../form-controls";
 
 interface PhotoFormData {
     photo: FileList | null
@@ -91,13 +92,6 @@ export default function ProfilePhotoEditModal() {
             </div>
             {errors.photo && <p className="help is-danger">Photo is required</p>}
         </div>
-        <div className="field is-grouped">
-            <div className="control">
-                <button className="button is-primary" type="submit">Submit</button>
-            </div>
-            <div className="control">
-                <button className="button is-secondary" type="reset">Cancel</button>
-            </div>
-        </div>
+        <FormControls disabled={isSyncing} />
     </form>
 }

@@ -4,6 +4,7 @@ import useProfile from "../../hooks/use-profile";
 import useModal from "../../hooks/use-modal";
 import ErrorMessage from "../error-message";
 import Content from "../content";
+import FormControls from "../form-controls";
 
 interface Props {
     children?: ReactNode
@@ -34,13 +35,6 @@ export default function VerifyModal({children, onSubmit}: Props) {
             <h2 className="subtitle">Are you sure?</h2>
             {children}
         </Content>
-        <div className="field is-grouped">
-            <div className="control">
-                <button className="button is-primary" type="submit">Yes</button>
-            </div>
-            <div className="control">
-                <button className="button is-secondary" type="reset">No</button>
-            </div>
-        </div>
+        <FormControls disabled={isSyncing} />
     </form>
 }

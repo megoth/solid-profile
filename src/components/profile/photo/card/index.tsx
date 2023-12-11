@@ -54,7 +54,7 @@ export default function PhotoCard({photoUrl}: Props) {
     const initiatePhotoDelete = () => {
         openModal(<VerifyModal onSubmit={handleDeletePhoto}>
             <p>This will delete the photo from your storage</p>
-        </VerifyModal>)
+        </VerifyModal>, {small: true})
     }
 
     const handleViewPhoto = (url: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
