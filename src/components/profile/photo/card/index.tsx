@@ -40,10 +40,14 @@ export default function PhotoCard({photoUrl}: Props) {
         openModal(<ProfilePhotoEditModal/>)
     }
 
+    const handleEditPhoto = () => {
+        openModal(<ProfilePhotoEditModal photoUrl={photoUrl}/>)
+    }
+
     const handleDeletePhoto = async () => {
         if (isSyncing || !profile || !profileResource || !photoResource) return;
         setIsSyncing(true);
-        await photoResource.delete();
+        await photoResource.delete().catch(setError);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
         updatedProfile.hasPhoto = updatedProfile.hasPhoto.filter((photo) => photo["@id"] !== photoUrl)
@@ -82,7 +86,7 @@ export default function PhotoCard({photoUrl}: Props) {
                 </figure>
             </div>
             {photoUrl
-                ? <CardOptions onEdit={console.log} onDelete={initiatePhotoDelete}/>
+                ? <CardOptions onEdit={handleEditPhoto} onDelete={initiatePhotoDelete}/>
                 : <CardOptions>
                     <UnstyledButton className="card-footer-item" onClick={handleAddPhoto}>
                         <span className="icon is-small"><FaPlus/></span>

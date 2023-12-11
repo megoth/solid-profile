@@ -5,16 +5,20 @@ import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
 import useProfile from "../../../../hooks/use-profile";
 import {Container, LeafUri} from "@ldo/solid";
-import {useLdo, useSolidAuth} from "@ldo/solid-react";
+import {useLdo, useResource, useSolidAuth} from "@ldo/solid-react";
 import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 import mime from "mime";
 import FormControls from "../../../form-controls";
+
+interface Props {
+    photoUrl?: string
+}
 
 interface PhotoFormData {
     photo: FileList | null
 }
 
-export default function ProfilePhotoEditModal() {
+export default function ProfilePhotoEditModal({photoUrl}: Props) {
     const {session} = useSolidAuth();
     const {profile, profileResource} = useProfile();
     const {closeModal} = useModal();
@@ -34,6 +38,7 @@ export default function ProfilePhotoEditModal() {
     const [container, setContainer] = useState<
         Container | undefined
     >();
+    const photoResource = useResource(photoUrl);
 
     useEffect(() => {
         if (!profileResource) return;
@@ -51,31 +56,37 @@ export default function ProfilePhotoEditModal() {
     }
 
     const onSubmit = async (data: PhotoFormData) => {
+        if (photoUrl && !data.photo?.[0]) {
+            return closeModal();
+        }
+        if (photoUrl && !photoResource) return;
         if (isSyncing || !profile || !profileResource || !data.photo?.[0]) return;
         setIsSyncing(true);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
-        const photoUri = [
+        const newPhotoUri = [
             data.photo[0].name.replace(/.(\w+)?$/, ""),
             crypto.randomUUID(),
             mime.getExtension(data.photo[0].type)
         ].join(".");
         const result = await container?.uploadChildAndOverwrite(
-            photoUri as LeafUri,
+            newPhotoUri as LeafUri,
             data.photo[0],
             data.photo[0].type
         );
         if (!result || result.isError) {
-            setError(new Error(result?.message))
-            return;
+            return setError(new Error(result?.message))
         }
-        const fullPhotoUri = container?.uri + photoUri;
-        updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": fullPhotoUri}]
-        // updatedProfile.knows = webId
-        //     ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
-        //         ? {"@id": data.webId}
-        //         : person)
-        //     : [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
+        if (photoResource) {
+            await photoResource.delete().catch(setError);
+        }
+        const fullPhotoUri = container?.uri + newPhotoUri;
+        updatedProfile.hasPhoto = [
+            ...(photoUrl
+                ? updatedProfile.hasPhoto.filter((photo) => photo["@id"] !== photoUrl)
+                : updatedProfile.hasPhoto),
+            {"@id": fullPhotoUri}
+        ]
         await commitData(updatedProfile).catch(setError);
         setValues({photo: null});
         setIsSyncing(false);
@@ -87,11 +98,12 @@ export default function ProfilePhotoEditModal() {
             <label className="label">Photo</label>
             <div className="control">
                 <input className="input" type="file" {...register("photo", {
-                    required: true,
-                })} placeholder={"Please add photo"}/>
+                    required: !photoUrl,
+                })} placeholder={photoUrl ? "Will replace image if given" : "Please add photo"}/>
             </div>
+            {photoUrl && <p className="help is-danger">Existing photo will be replaced</p>}
             {errors.photo && <p className="help is-danger">Photo is required</p>}
         </div>
-        <FormControls disabled={isSyncing} />
+        <FormControls disabled={isSyncing}/>
     </form>
 }
