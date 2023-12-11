@@ -12,3 +12,11 @@
 .modalContent.modalContent {
     padding: 1rem;
 }
+
+.modalContentIsSmall {
+    width: auto;
+
+    :global(.field.is-grouped) {
+        justify-content: center;
+    }
+}
