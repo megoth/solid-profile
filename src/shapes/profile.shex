@@ -13,7 +13,7 @@ PREFIX xtypes: <http://graphite.ecs.soton.ac.uk/xtypes/#xtypes:>
 shape:SolidProfile EXTRA rdf:type {
   rdf:type [schema:Person foaf:Person] ;
   vcard:fn xsd:string? ;
-  vcard:hasPhoto IRI+ ;
+  vcard:hasPhoto IRI* ;
   foaf:name xsd:string? ;
   foaf:homepage xsd:string? ;
   foaf:knows IRI* ;

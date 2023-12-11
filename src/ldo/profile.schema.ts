@@ -44,7 +44,7 @@ export const profileSchema: Schema = {
                 type: "NodeConstraint",
                 nodeKind: "iri",
               },
-              min: 1,
+              min: 0,
               max: -1,
             },
             {

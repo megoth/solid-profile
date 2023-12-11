@@ -20,7 +20,7 @@ export interface SolidProfile {
         "@id": "Person2";
       };
   fn?: string;
-  hasPhoto: {
+  hasPhoto?: {
     "@id": string;
   }[];
   name?: string;

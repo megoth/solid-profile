@@ -11,16 +11,17 @@ interface Props {
 export default function ProfileKnows({value}: Props) {
     const {canEdit} = useProfile();
 
-    return <>
-        {value && value.length > 0 && (<Grid>
-                {value.sort(sortById).map((person) => (
-                    <li key={`person-${person["@id"]}`}>
-                        <ProfileKnowsPerson webId={person["@id"]}/>
-                    </li>
-                ))}
-                {canEdit && <li><ProfileKnowsAddButton /></li>}
-            </Grid>
+    return <Grid>
+        {value && value.length > 0 && (<>
+            {value.sort(sortById).map((person) => (
+                <li key={`person-${person["@id"]}`}>
+                    <ProfileKnowsPerson webId={person["@id"]}/>
+                </li>
+            ))}
+            {canEdit && <li><ProfileKnowsAddButton/></li>}
+        </>)}
+        {value && value.length === 0 && (
+            <li>{canEdit ? <ProfileKnowsAddButton/> : "No contacts listed"}</li>
         )}
-        {value && value.length === 0 && (canEdit ? <ProfileKnowsAddButton /> : "No contacts listed")}
-    </>
+    </Grid>
 }

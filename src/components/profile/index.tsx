@@ -78,6 +78,7 @@ export default function Profile() {
         </>)
     }
 
+    const name = profile?.name || profile?.fn;
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {!session.isLoggedIn && isEditMode && <div className="message is-danger">
@@ -120,26 +121,25 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
-            <div className="field">
+            {(name || isOwner )&& <div className="field">
                 <label className="label">Name</label>
                 <div className="control">
-                    <ProfileTextField name="name" required={true} register={register}
-                                      value={profile?.name || profile?.fn}/>
+                    <ProfileTextField name="name" required={true} register={register} value={name}/>
                 </div>
                 {errors.name && <p className="help is-danger">Name is required</p>}
-            </div>
-            <div className="field">
+            </div>}
+            {(profile?.hasPhoto?.length > 0 || isOwner) && <div className="field">
                 <label className="label">Photo</label>
                 <div className="control">
                     <ProfilePhoto value={profile?.hasPhoto}/>
                 </div>
-            </div>
-            <div className="field">
+            </div>}
+            {(profile?.knows?.length > 0 || isOwner) && <div className="field">
                 <label className="label">Knows</label>
                 <div className="control">
                     <ProfileKnows value={profile?.knows}/>
                 </div>
-            </div>
+            </div>}
         </form>
     )
 }
