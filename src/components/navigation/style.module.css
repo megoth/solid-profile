@@ -32,6 +32,8 @@
     }
 
     :global(.navbar-end) {
-        margin-right: -0.75rem;
+        @media screen and (min-width: 1024px) {
+            margin-right: -0.75rem;
+        }
     }
 }
