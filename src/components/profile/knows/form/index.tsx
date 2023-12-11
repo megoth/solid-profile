@@ -15,9 +15,9 @@ interface AddWebIdFormData {
     webId: string
 }
 
-export default function ProfileKnowsModal({webId}: Props) {
+export default function ProfileKnowsForm({webId}: Props) {
     const {profile, profileResource} = useProfile();
-    const {close} = useModal();
+    const {closeModal} = useModal();
     const {commitData, changeData, createData} = useLdo();
     const [values, setValues] = useState({
         webId: webId || ""
@@ -49,10 +49,10 @@ export default function ProfileKnowsModal({webId}: Props) {
         await commitData(updatedProfile).catch(setError);
         setValues({webId: ""});
         setIsSyncing(false);
-        close();
+        closeModal();
     }
 
-    return <form onSubmit={handleSubmit(onSubmit)} onReset={close} className="box">
+    return <form onSubmit={handleSubmit(onSubmit)} onReset={closeModal} className="box">
         <div className="field">
             <label className="label">WebID</label>
             <div className="control">

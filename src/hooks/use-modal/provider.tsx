@@ -13,7 +13,7 @@ export function ModalContextProvider({children}: Props) {
     const close = () => setModal(null);
 
     return (
-        <ModalContext.Provider value={{close, openModal: setModal}}>
+        <ModalContext.Provider value={{closeModal: close, openModal: setModal}}>
             {modal && <div className={clsx("modal is-active", styles.modal)}>
                 <div className="modal-background" onClick={close}></div>
                 <div className={clsx("modal-content", styles.modalContent)}>

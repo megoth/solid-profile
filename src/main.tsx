@@ -7,11 +7,16 @@ import "bulma/css/bulma.min.css"
 import {ModalContextProvider} from "./hooks/use-modal/provider.tsx";
 import Frontpage from "./pages/frontpage";
 import ProfilePage from "./pages/profile";
+import ProfileContextProvider from "./hooks/use-profile/provider.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout/>,
+        element: <ProfileContextProvider>
+            <ModalContextProvider>
+                <Layout/>
+            </ModalContextProvider>
+        </ProfileContextProvider>,
         children: [
             {
                 path: "/:webId",
@@ -28,9 +33,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <BrowserSolidLdoProvider>
-            <ModalContextProvider>
-                <RouterProvider router={router}/>
-            </ModalContextProvider>
+            <RouterProvider router={router}/>
         </BrowserSolidLdoProvider>
     </React.StrictMode>,
 )

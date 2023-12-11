@@ -12,6 +12,7 @@ import ErrorMessage from "../error-message";
 import ProfilePhoto from "./photo";
 import ProfileKnows from "./knows";
 import useProfile from "../../hooks/use-profile";
+import {useCopyToClipboard} from "../../hooks/use-copy-to-clipboard";
 
 export default function Profile() {
     const {session} = useSolidAuth();
@@ -37,6 +38,8 @@ export default function Profile() {
     const [error, setError] = useState<Error | null>(null);
     const compoundedError = error || (profileResource?.isError ? new Error("Error loading resource") : null);
     const [isSyncing, setIsSyncing] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_value, copy] = useCopyToClipboard();
 
     useEffect(() => {
         if (!profile) return;
@@ -64,6 +67,10 @@ export default function Profile() {
         setIsSyncing(false);
     }
 
+    const handleCopy = async () => {
+        await copy(profile?.["@id"] || "");
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {!session.isLoggedIn && tryingToEdit && <div className="message is-danger">
@@ -74,7 +81,7 @@ export default function Profile() {
             {profile["@id"] && session.isLoggedIn && canEdit && (
                 <div className={clsx("message", {"is-text": !isDirty, "is-primary": isDirty})}>
                     <div className={clsx("message-body", styles.messageBody)}>
-                        <span>The form automatically saves your progress when you leave a field.</span>
+                        <span>This form automatically saves your progress.</span>
                         <NavLink to={`/${encodeURIComponent(profile["@id"])}`} className={clsx("button is-primary")}>
                             Exit edit mode
                         </NavLink>
@@ -90,6 +97,19 @@ export default function Profile() {
                     </div>
                 </div>
             )}
+            <div className="field">
+                <label className="label">
+                    WebID (<a href={profile["@id"]}>go to resource</a>)
+                </label>
+                <div className="field has-addons" style={{alignItems: "center"}}>
+                    <div className="control is-expanded">
+                        <ProfileTextField name="name" value={profile["@id"]} alwaysInput={true}/>
+                    </div>
+                    <div className="control">
+                        <button className="button" onClick={handleCopy}>Copy URL</button>
+                    </div>
+                </div>
+            </div>
             <div className="field">
                 <label className="label">Name</label>
                 <div className="control">

@@ -9,12 +9,12 @@ interface Props {
 }
 
 export default function ProfileContextProvider({children}: Props) {
-    const {session} = useSolidAuth();
     const {webId} = useParams();
+    const {session} = useSolidAuth();
     const [searchParams] = useSearchParams();
     const profileResource = useResource(webId, {reloadOnMount: true});
     const profile = useSubject(SolidProfileShapeType, webId);
-    const isOwner = webId === session.webId;
+    const isOwner = useMemo(() => webId === session.webId, [session.webId, webId]);
     const tryingToEdit = searchParams.has("edit");
     const canEdit = isOwner && tryingToEdit;
     const isLoading = useMemo(

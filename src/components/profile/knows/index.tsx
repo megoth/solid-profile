@@ -4,7 +4,7 @@ import ProfileKnowsCard from "./card";
 import {BsFillPersonPlusFill} from "react-icons/bs";
 import UnstyledButton from "../../unstyled-button";
 import useModal from "../../../hooks/use-modal";
-import ProfileKnowsModal from "./modal";
+import ProfileKnowsForm from "./form";
 import useProfile from "../../../hooks/use-profile";
 import {clsx} from "clsx";
 import styles from "./person/style.module.css";
@@ -18,7 +18,7 @@ export default function ProfileKnows({value}: Props) {
     const {openModal} = useModal();
 
     const handleAddContact = () => {
-        openModal(<ProfileKnowsModal/>);
+        openModal(<ProfileKnowsForm/>);
     }
 
     return value && value.length > 0

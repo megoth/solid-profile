@@ -1,23 +1,25 @@
 import React, {HTMLAttributes} from "react";
-import {useSearchParams} from "react-router-dom";
 import {UseFormRegister} from "react-hook-form";
 import {PROFILE_FORM_DATA} from "../../../constants.ts";
+import useProfile from "../../../hooks/use-profile";
 
 interface Props extends HTMLAttributes<HTMLInputElement> {
-    name: keyof PROFILE_FORM_DATA;
-    required?: boolean;
-    register: UseFormRegister<PROFILE_FORM_DATA>,
+    alwaysInput?: boolean
+    name: keyof PROFILE_FORM_DATA
+    required?: boolean
+    register?: UseFormRegister<PROFILE_FORM_DATA>
     value: string | undefined
 }
 
-export default function ProfileTextField({name, required, register, value, ...props}: Props) {
-    const [searchParams] = useSearchParams();
+export default function ProfileTextField({alwaysInput, name, required, register, value, ...props}: Props) {
+    const {canEdit} = useProfile();
 
     const handleBlur = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         event.currentTarget.form?.requestSubmit();
     }
 
-    return searchParams.has("edit")
-        ? <input className="input" {...props} {...register(name, {required, onBlur: handleBlur})}/>
-        : value;
+    if (canEdit && register) {
+        return <input className="input" {...props} {...register(name, {required, onBlur: handleBlur})}/>
+    }
+    return !canEdit && !alwaysInput ? value : <input className="input" disabled={true} value={value} {...props}/>;
 }

@@ -2,21 +2,20 @@ import {clsx} from "clsx";
 import styles from "./style.module.css";
 import {HTMLAttributes, ReactNode} from "react";
 import UnstyledButton from "../../../unstyled-button";
-import ProfileKnowsModal from "../modal";
+import ProfileKnowsForm from "../form";
 import useModal from "../../../../hooks/use-modal";
-import useProfile from "../../../../hooks/use-profile";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode
+    canEdit?: boolean
     webId?: string | null
 }
 
-export default function ProfileKnowsCard({children, className, webId, ...props}: Props) {
+export default function ProfileKnowsCard({canEdit, children, className, webId, ...props}: Props) {
     const {openModal} = useModal();
-    const {canEdit} = useProfile();
 
     const handleEditContact = () => {
-        openModal(<ProfileKnowsModal webId={webId}/>);
+        openModal(<ProfileKnowsForm webId={webId}/>);
     }
 
     return (
