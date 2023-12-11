@@ -13,7 +13,8 @@ import ProfilePhoto from "./photo";
 import ProfileKnows from "./knows";
 import useProfile from "../../hooks/use-profile";
 import {useCopyToClipboard} from "../../hooks/use-copy-to-clipboard";
-import {BsClipboard2PlusFill} from "react-icons/bs";
+import {BsClipboard2PlusFill, BsFillClipboardCheckFill} from "react-icons/bs";
+import useNotification from "../../hooks/use-notification";
 
 export default function Profile() {
     const {session} = useSolidAuth();
@@ -41,6 +42,7 @@ export default function Profile() {
     const [isSyncing, setIsSyncing] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_value, copy] = useCopyToClipboard();
+    const {notify} = useNotification();
 
     useEffect(() => {
         if (!profile) return;
@@ -70,6 +72,10 @@ export default function Profile() {
 
     const handleCopy = async () => {
         await copy(profile?.["@id"] || "");
+        notify(<>
+            <span className={"icon is-small"}><BsFillClipboardCheckFill/></span>
+            <span>Copied URL</span>
+        </>)
     }
 
     return (

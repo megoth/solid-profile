@@ -8,6 +8,7 @@ import {ModalContextProvider} from "./hooks/use-modal/provider.tsx";
 import Frontpage from "./pages/frontpage";
 import ProfilePage from "./pages/profile";
 import ProfileContextProvider from "./hooks/use-profile/provider.tsx";
+import {NotificationContextProvider} from "./hooks/use-notification/provider.tsx";
 
 const router = createBrowserRouter([
     {
@@ -33,7 +34,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <BrowserSolidLdoProvider>
-            <RouterProvider router={router}/>
+            <NotificationContextProvider>
+                <RouterProvider router={router}/>
+            </NotificationContextProvider>
         </BrowserSolidLdoProvider>
     </React.StrictMode>,
 )
