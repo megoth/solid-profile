@@ -1,6 +1,6 @@
-import {useLdo, useResource, useSolidAuth, useSubject} from "@ldo/solid-react";
+import {useLdo, useSolidAuth} from "@ldo/solid-react";
 import Loading from "../loading";
-import {NavLink, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes";
 import styles from "./style.module.css";
 import {clsx} from "clsx";
@@ -11,15 +11,19 @@ import {useEffect, useState} from "react";
 import ErrorMessage from "../error-message";
 import ProfilePhoto from "./photo";
 import ProfileKnows from "./knows";
-import ModalContextProvider from "../../hooks/use-profile-form/provider.tsx";
+import useProfile from "../../hooks/use-profile";
 
 export default function Profile() {
-    const {webId} = useParams();
-    const [searchParams] = useSearchParams();
     const {session} = useSolidAuth();
+    const {
+        canEdit,
+        isLoading,
+        isOwner,
+        profile,
+        profileResource,
+        tryingToEdit
+    } = useProfile();
     const {commitData, changeData, createData} = useLdo();
-    const profileResource = useResource(webId, {reloadOnMount: true});
-    const profile = useSubject(SolidProfileShapeType, webId);
     const [values, setValues] = useState({
         name: ""
     });
@@ -31,8 +35,6 @@ export default function Profile() {
         values
     });
     const [error, setError] = useState<Error | null>(null);
-    const ownProfile = webId === session.webId;
-    const canEdit = ownProfile && searchParams.has("edit");
     const compoundedError = error || (profileResource?.isError ? new Error("Error loading resource") : null);
     const [isSyncing, setIsSyncing] = useState(false);
     const navigate = useNavigate();
@@ -48,70 +50,68 @@ export default function Profile() {
         return <ErrorMessage error={compoundedError}/>
     }
 
-    if (!profile || profileResource?.isDoingInitialFetch()) {
+    if (!profile || isLoading) {
         return <Loading/>
     }
 
     const onSubmit = async (data: PROFILE_FORM_DATA) => {
-        if (isSyncing || !webId || !profileResource) return;
+        if (isSyncing || !profile["@id"] || !profileResource) return;
         setIsSyncing(true);
-        const oldProfile = profile || createData(SolidProfileShapeType, webId);
+        const oldProfile = profile || createData(SolidProfileShapeType, profile["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
         updatedProfile.name = data.name;
         await commitData(updatedProfile).catch(setError);
         setValues(data);
         setIsSyncing(false);
-        navigate(`/${encodeURIComponent(webId)}`);
+        navigate(`/${encodeURIComponent(profile["@id"])}`);
     }
 
     return (
-        <ModalContextProvider profile={profile} profileResource={profileResource} canEdit={canEdit}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                {!session.isLoggedIn && searchParams.has("edit") && <div className="message is-danger">
-                    <div className="message-body">
-                        You're not able to save any changes since you're not authenticated.
-                    </div>
-                </div>}
-                {webId && session.isLoggedIn && canEdit && (
-                    <div className={clsx("message", {"is-text": !isDirty, "is-primary": isDirty})}>
-                        <div className={clsx("message-body", styles.messageBody)}>
-                            <span>Submit when you're done.</span>
-                            <button className={clsx("button is-primary")} type="submit" disabled={isSyncing}>
-                                Submit changes
-                            </button>
-                        </div>
-                    </div>
-                )}
-                {webId && session.isLoggedIn && ownProfile && !canEdit && (
-                    <div className="message is-info">
-                        <div className={clsx("message-body", styles.messageBody)}>
-                            <span>This is your profile.</span>
-                            <NavLink to={`/${encodeURIComponent(webId)}?edit`}
-                                     className="button is-info">Edit</NavLink>
-                        </div>
-                    </div>
-                )}
-                <div className="field">
-                    <label className="label">Name</label>
-                    <div className="control">
-                        <ProfileTextField name="name" required={true} register={register}
-                                          value={profile?.name || profile?.fn}/>
-                    </div>
-                    {errors.name && <p className="help is-danger">Name is required</p>}
+        <form onSubmit={handleSubmit(onSubmit)}>
+            {!session.isLoggedIn && tryingToEdit && <div className="message is-danger">
+                <div className="message-body">
+                    You're not able to save any changes since you're not authenticated.
                 </div>
-                <div className="field">
-                    <label className="label">Photo</label>
-                    <div className="control">
-                        <ProfilePhoto value={profile?.hasPhoto}/>
+            </div>}
+            {profile["@id"] && session.isLoggedIn && canEdit && (
+                <div className={clsx("message", {"is-text": !isDirty, "is-primary": isDirty})}>
+                    <div className={clsx("message-body", styles.messageBody)}>
+                        <span>Submit when you're done.</span>
+                        <button className={clsx("button is-primary")} type="submit" disabled={isSyncing}>
+                            Submit changes
+                        </button>
                     </div>
                 </div>
-                <div className="field">
-                    <label className="label">Knows</label>
-                    <div className="control">
-                        <ProfileKnows value={profile?.knows}/>
+            )}
+            {profile["@id"] && session.isLoggedIn && isOwner && !tryingToEdit && (
+                <div className="message is-info">
+                    <div className={clsx("message-body", styles.messageBody)}>
+                        <span>This is your profile.</span>
+                        <NavLink to={`/${encodeURIComponent(profile["@id"])}?edit`}
+                                 className="button is-info">Edit</NavLink>
                     </div>
                 </div>
-            </form>
-        </ModalContextProvider>
+            )}
+            <div className="field">
+                <label className="label">Name</label>
+                <div className="control">
+                    <ProfileTextField name="name" required={true} register={register}
+                                      value={profile?.name || profile?.fn}/>
+                </div>
+                {errors.name && <p className="help is-danger">Name is required</p>}
+            </div>
+            <div className="field">
+                <label className="label">Photo</label>
+                <div className="control">
+                    <ProfilePhoto value={profile?.hasPhoto}/>
+                </div>
+            </div>
+            <div className="field">
+                <label className="label">Knows</label>
+                <div className="control">
+                    <ProfileKnows value={profile?.knows}/>
+                </div>
+            </div>
+        </form>
     )
 }

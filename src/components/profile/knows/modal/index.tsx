@@ -5,7 +5,7 @@ import {useLdo} from "@ldo/solid-react";
 import useModal from "../../../../hooks/use-modal";
 import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
-import useProfileForm from "../../../../hooks/use-profile-form";
+import useProfile from "../../../../hooks/use-profile";
 
 interface Props {
     webId?: string | null
@@ -16,7 +16,7 @@ interface AddWebIdFormData {
 }
 
 export default function ProfileKnowsModal({webId}: Props) {
-    const {profile, profileResource} = useProfileForm();
+    const {profile, profileResource} = useProfile();
     const {close} = useModal();
     const {commitData, changeData, createData} = useLdo();
     const [values, setValues] = useState({

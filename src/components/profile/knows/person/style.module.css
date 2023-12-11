@@ -1,9 +1,12 @@
-.cardFooterItem.cardFooterItem.cardFooterItem.cardFooterItem.cardFooterItem {
-    padding: 0.75rem;
+.image {
+    max-height: 48px;
+    overflow: hidden;
     text-align: center;
-    &:not(:last-child) {
-        border-right-width: 1px;
-    }
+    width: 48px;
+}
+
+.mediaContent {
+    overflow: hidden;
 }
 
 .webId.webId {

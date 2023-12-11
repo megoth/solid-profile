@@ -1,6 +1,6 @@
 import {useResource, useSolidAuth, useSubject} from "@ldo/solid-react";
-import Content from "../content";
-import Loading from "../loading";
+import Content from "../../components/content";
+import Loading from "../../components/loading";
 import {NavLink} from "react-router-dom";
 import {SolidProfileShapeType} from "../../ldo/profile.shapeTypes.ts";
 import FrontpageBody from "./index.mdx";
