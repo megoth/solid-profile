@@ -1,4 +1,5 @@
 import styles from "./style.module.css";
+import Image from "../../../image";
 
 interface Props {
     src: string
@@ -7,7 +8,7 @@ interface Props {
 export default function ProfilePhotoViewModal({src}: Props) {
     return <div className={styles.container}>
         <a href={src} target="_blank">
-            <img src={src} alt={`Photo of person`}/>
+            <Image src={src} alt={`Photo of person`}/>
         </a>
     </div>;
 }

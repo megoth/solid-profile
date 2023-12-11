@@ -7,16 +7,13 @@ import useProfile from "../../../../hooks/use-profile";
 import {Container, LeafUri} from "@ldo/solid";
 import {useLdo, useSolidAuth} from "@ldo/solid-react";
 import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
-
-interface Props {
-    photo?: string | null
-}
+import mime from "mime";
 
 interface PhotoFormData {
     photo: FileList | null
 }
 
-export default function ProfilePhotoEditModal({photo}: Props) {
+export default function ProfilePhotoEditModal() {
     const {session} = useSolidAuth();
     const {profile, profileResource} = useProfile();
     const {closeModal} = useModal();
@@ -57,8 +54,13 @@ export default function ProfilePhotoEditModal({photo}: Props) {
         setIsSyncing(true);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
+        const photoUri = [
+            data.photo[0].name.replace(/.(\w+)?$/, ""),
+            crypto.randomUUID(),
+            mime.getExtension(data.photo[0].type)
+        ].join(".");
         const result = await container?.uploadChildAndOverwrite(
-            data.photo[0].name as LeafUri,
+            photoUri as LeafUri,
             data.photo[0],
             data.photo[0].type
         );
@@ -66,7 +68,8 @@ export default function ProfilePhotoEditModal({photo}: Props) {
             setError(new Error(result?.message))
             return;
         }
-        updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": result.resource.uri}]
+        const fullPhotoUri = container?.uri + photoUri;
+        updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": fullPhotoUri}]
         // updatedProfile.knows = webId
         //     ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
         //         ? {"@id": data.webId}
