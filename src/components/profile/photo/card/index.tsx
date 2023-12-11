@@ -8,12 +8,15 @@ import {MdOutlineAddPhotoAlternate} from "react-icons/md";
 import UnstyledButton from "../../../unstyled-button";
 import {FaPlus} from "react-icons/fa";
 import ProfilePhotoEditModal from "../edit-modal";
+import Image from "../../../image";
+import useProfile from "../../../../hooks/use-profile";
 
 interface Props {
     photo?: { "@id": string }
 }
 
 export default function PhotoCard({photo}: Props) {
+    const {profile} = useProfile()
     const {openModal} = useModal();
 
     const handleAddPhoto = () => {
@@ -32,10 +35,15 @@ export default function PhotoCard({photo}: Props) {
                     {photo
                         ? (
                             <a href={photo["@id"]} onClick={handleSelect(photo["@id"])}>
-                                <img src={photo["@id"]} alt={`Photo of person`}/>
+                                <Image src={photo["@id"]}
+                                       alt={`Photo of ${profile?.name || profile?.fn || profile?.["@id"]}`}/>
                             </a>
                         )
-                        : <MdOutlineAddPhotoAlternate/>}
+                        : (
+                            <UnstyledButton onClick={handleAddPhoto} className={styles.iconButton}>
+                                <MdOutlineAddPhotoAlternate/>
+                            </UnstyledButton>
+                        )}
 
                 </figure>
             </div>

@@ -1,12 +1,16 @@
 .isIcon {
     align-items: center;
-    font-size: 96px;
     display: flex;
 }
 
-.image {
+.iconButton.iconButton.iconButton.iconButton.iconButton {
     justify-content: center;
     display: flex;
+    font-size: 96px;
+    height: 100%;
+}
+
+.image {
     height: 250px;
     overflow: hidden;
     width: 100%;

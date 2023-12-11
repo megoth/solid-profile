@@ -1,23 +1,27 @@
 import {useForm} from "react-hook-form";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import useModal from "../../../../hooks/use-modal";
 import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
 import useProfile from "../../../../hooks/use-profile";
+import {Container, LeafUri} from "@ldo/solid";
+import {useLdo, useSolidAuth} from "@ldo/solid-react";
+import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 
 interface Props {
     photo?: string | null
 }
 
 interface PhotoFormData {
-    photo: string
+    photo: FileList | null
 }
 
 export default function ProfilePhotoEditModal({photo}: Props) {
+    const {session} = useSolidAuth();
     const {profile, profileResource} = useProfile();
     const {closeModal} = useModal();
     const [values, setValues] = useState({
-        photo: photo || ""
+        photo: null
     });
     const {
         register,
@@ -26,8 +30,19 @@ export default function ProfilePhotoEditModal({photo}: Props) {
     } = useForm<PhotoFormData>({
         values
     });
-    const [error] = useState<Error | null>(null);
+    const [error, setError] = useState<Error | null>(null);
     const [isSyncing, setIsSyncing] = useState(false);
+    const {changeData, commitData, createData, getResource} = useLdo();
+    const [container, setContainer] = useState<
+        Container | undefined
+    >();
+
+    useEffect(() => {
+        if (!profileResource) return;
+        const parentContainer = profileResource.getParentContainer() as Container;
+        if (!parentContainer || !parentContainer.uri) return;
+        parentContainer.createIfAbsent().then(() => setContainer(parentContainer)).catch(setError);
+    }, [getResource, profileResource, session.webId]);
 
     if (error) {
         return <ErrorMessage error={error}/>
@@ -38,18 +53,27 @@ export default function ProfilePhotoEditModal({photo}: Props) {
     }
 
     const onSubmit = async (data: PhotoFormData) => {
-        if (isSyncing || !profile || !profileResource) return;
+        if (isSyncing || !profile || !profileResource || !data.photo?.[0]) return;
         setIsSyncing(true);
-        console.log(data);
-        // const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
-        // const updatedProfile = changeData(oldProfile, profileResource);
+        const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
+        const updatedProfile = changeData(oldProfile, profileResource);
+        const result = await container?.uploadChildAndOverwrite(
+            data.photo[0].name as LeafUri,
+            data.photo[0],
+            data.photo[0].type
+        );
+        if (!result || result.isError) {
+            setError(new Error(result?.message))
+            return;
+        }
+        updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": result.resource.uri}]
         // updatedProfile.knows = webId
         //     ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
         //         ? {"@id": data.webId}
         //         : person)
         //     : [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
-        // await commitData(updatedProfile).catch(setError);
-        setValues({photo: ""});
+        await commitData(updatedProfile).catch(setError);
+        setValues({photo: null});
         setIsSyncing(false);
         closeModal();
     }
