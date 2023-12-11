@@ -108,9 +108,7 @@ export default function Profile() {
                     </div>
                     <div className="control">
                         <button className="button is-light" onClick={handleCopy}>
-                            <span className="icon is-small">
-                                <BsClipboard2PlusFill/>
-                            </span>
+                            <span className="icon is-small"><BsClipboard2PlusFill/></span>
                             <span>Copy URL</span>
                         </button>
                     </div>

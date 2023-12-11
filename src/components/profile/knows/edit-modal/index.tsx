@@ -16,7 +16,7 @@ interface AddWebIdFormData {
     webId: string
 }
 
-export default function ProfileKnowsModal({webId}: Props) {
+export default function ProfileKnowsEditModal({webId}: Props) {
     const {profile, profileResource} = useProfile();
     const {closeModal} = useModal();
     const {commitData, changeData, createData} = useLdo();

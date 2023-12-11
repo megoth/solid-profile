@@ -1,0 +1,9 @@
+.cardFooter.cardFooter.cardFooter.cardFooter {
+    :global(.card-footer-item) {
+        padding: 0.75rem;
+        text-align: center;
+        &:not(:last-child) {
+            border-right-width: 1px;
+        }
+    }
+}

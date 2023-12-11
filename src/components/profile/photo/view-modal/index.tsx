@@ -4,7 +4,7 @@ interface Props {
     src: string
 }
 
-export default function ProfilePhotoModal({src}: Props) {
+export default function ProfilePhotoViewModal({src}: Props) {
     return <div className={styles.container}>
         <img src={src} alt={`Photo of person`}/>
     </div>;

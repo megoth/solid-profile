@@ -1,5 +1,13 @@
+.isIcon {
+    align-items: center;
+    font-size: 96px;
+    display: flex;
+}
+
 .image {
-    height: 200px;
+    justify-content: center;
+    display: flex;
+    height: 250px;
     overflow: hidden;
     width: 100%;
 }
