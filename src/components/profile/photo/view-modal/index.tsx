@@ -6,6 +6,8 @@ interface Props {
 
 export default function ProfilePhotoViewModal({src}: Props) {
     return <div className={styles.container}>
-        <img src={src} alt={`Photo of person`}/>
+        <a href={src} target="_blank">
+            <img src={src} alt={`Photo of person`}/>
+        </a>
     </div>;
 }

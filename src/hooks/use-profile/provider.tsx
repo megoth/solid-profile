@@ -15,14 +15,14 @@ export default function ProfileContextProvider({children}: Props) {
     const profileResource = useResource(webId, {reloadOnMount: true});
     const profile = useSubject(SolidProfileShapeType, webId);
     const isOwner = useMemo(() => webId === session.webId, [session.webId, webId]);
-    const tryingToEdit = searchParams.has("edit");
-    const canEdit = isOwner && tryingToEdit;
+    const isEditMode = searchParams.has("edit");
+    const canEdit = isOwner && isEditMode;
     const isLoading = useMemo(
         () => !profile || profileResource?.isDoingInitialFetch() || false,
         [profile, profileResource]
     )
     return (
-        <ProfileContext.Provider value={{canEdit, isLoading, isOwner, profile, profileResource, tryingToEdit}}>
+        <ProfileContext.Provider value={{canEdit, isEditMode, isLoading, isOwner, profile, profileResource}}>
             {children}
         </ProfileContext.Provider>
     )

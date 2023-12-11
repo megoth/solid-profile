@@ -1,36 +1,32 @@
 import {useForm} from "react-hook-form";
-import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 import {useState} from "react";
-import {useLdo} from "@ldo/solid-react";
 import useModal from "../../../../hooks/use-modal";
 import ErrorMessage from "../../../error-message";
 import Loading from "../../../loading";
 import useProfile from "../../../../hooks/use-profile";
-import {VALID_URL_PATTERN} from "../../../../constants.ts";
 
 interface Props {
-    webId?: string | null
+    photo?: string | null
 }
 
-interface WebIdFormData {
-    webId: string
+interface PhotoFormData {
+    photo: string
 }
 
-export default function ProfileKnowsEditModal({webId}: Props) {
+export default function ProfilePhotoEditModal({photo}: Props) {
     const {profile, profileResource} = useProfile();
     const {closeModal} = useModal();
-    const {commitData, changeData, createData} = useLdo();
     const [values, setValues] = useState({
-        webId: webId || ""
+        photo: photo || ""
     });
     const {
         register,
         handleSubmit,
         formState: {errors}
-    } = useForm<WebIdFormData>({
+    } = useForm<PhotoFormData>({
         values
     });
-    const [error, setError] = useState<Error | null>(null);
+    const [error] = useState<Error | null>(null);
     const [isSyncing, setIsSyncing] = useState(false);
 
     if (error) {
@@ -41,32 +37,32 @@ export default function ProfileKnowsEditModal({webId}: Props) {
         return <Loading/>
     }
 
-    const onSubmit = async (data: WebIdFormData) => {
+    const onSubmit = async (data: PhotoFormData) => {
         if (isSyncing || !profile || !profileResource) return;
         setIsSyncing(true);
-        const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
-        const updatedProfile = changeData(oldProfile, profileResource);
-        updatedProfile.knows = webId
-            ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
-                ? {"@id": data.webId}
-                : person)
-            : [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
-        await commitData(updatedProfile).catch(setError);
-        setValues({webId: ""});
+        console.log(data);
+        // const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
+        // const updatedProfile = changeData(oldProfile, profileResource);
+        // updatedProfile.knows = webId
+        //     ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
+        //         ? {"@id": data.webId}
+        //         : person)
+        //     : [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
+        // await commitData(updatedProfile).catch(setError);
+        setValues({photo: ""});
         setIsSyncing(false);
         closeModal();
     }
 
     return <form onSubmit={handleSubmit(onSubmit)} onReset={closeModal} className="box">
         <div className="field">
-            <label className="label">WebID</label>
+            <label className="label">Photo</label>
             <div className="control">
-                <input className="input" type={"url"} {...register("webId", {
+                <input className="input" type="file" {...register("photo", {
                     required: true,
-                    pattern: VALID_URL_PATTERN
-                })} placeholder={"Please add valid URL"}/>
+                })} placeholder={"Please add photo"}/>
             </div>
-            {errors.webId && <p className="help is-danger">WebID is required</p>}
+            {errors.photo && <p className="help is-danger">Photo is required</p>}
         </div>
         <div className="field is-grouped">
             <div className="control">

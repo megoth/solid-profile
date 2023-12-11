@@ -19,11 +19,11 @@ export default function Profile() {
     const {session} = useSolidAuth();
     const {
         canEdit,
+        isEditMode,
         isLoading,
         isOwner,
         profile,
         profileResource,
-        tryingToEdit
     } = useProfile();
     const {commitData, changeData, createData} = useLdo();
     const [values, setValues] = useState({
@@ -74,7 +74,7 @@ export default function Profile() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            {!session.isLoggedIn && tryingToEdit && <div className="message is-danger">
+            {!session.isLoggedIn && isEditMode && <div className="message is-danger">
                 <div className="message-body">
                     You're not able to save any changes since you're not authenticated.
                 </div>
@@ -89,7 +89,7 @@ export default function Profile() {
                     </div>
                 </div>
             )}
-            {profile["@id"] && session.isLoggedIn && isOwner && !tryingToEdit && (
+            {profile["@id"] && session.isLoggedIn && isOwner && !isEditMode && (
                 <div className="message is-info">
                     <div className={clsx("message-body", styles.messageBody)}>
                         <span>This is your profile.</span>

@@ -8,14 +8,14 @@ const ProfileContext = createContext<{
     isOwner: boolean
     profile?: SolidProfile | null
     profileResource?: ReturnType<typeof useResource> | null
-    tryingToEdit: boolean
+    isEditMode: boolean
 }>({
     canEdit: false,
     isLoading: false,
     isOwner: false,
     profile: null,
     profileResource: null,
-    tryingToEdit: false
+    isEditMode: false
 });
 
 export default ProfileContext;
