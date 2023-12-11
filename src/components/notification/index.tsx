@@ -17,7 +17,7 @@ export default function Notification({index, notification}: Props) {
         setTimeout(() => {
             setHidden(true);
             hide(notification.id);
-        }, 2000);
+        }, 5000);
     }, [hide, notification.id]);
 
     return (

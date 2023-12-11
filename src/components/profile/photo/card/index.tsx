@@ -15,6 +15,7 @@ import {useLdo, useResource} from "@ldo/solid-react";
 import Loading from "../../../loading";
 import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 import ErrorMessage from "../../../error-message";
+import useNotification from "../../../../hooks/use-notification";
 
 interface Props {
     photoUrl?: string
@@ -27,6 +28,7 @@ export default function PhotoCard({photoUrl}: Props) {
     const [isSyncing, setIsSyncing] = useState(false);
     const {changeData, commitData, createData} = useLdo();
     const [error, setError] = useState<Error | null>(null);
+    const {notify} = useNotification();
 
     if (error) {
         return <ErrorMessage error={error}/>
@@ -55,6 +57,7 @@ export default function PhotoCard({photoUrl}: Props) {
         }) => photo["@id"] !== photoUrl)
         await commitData(updatedProfile).catch(setError);
         setIsSyncing(false);
+        notify(<>Photo removed</>);
     }
 
     const initiatePhotoDelete = () => {

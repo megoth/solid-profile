@@ -8,6 +8,7 @@ import Loading from "../../../loading";
 import useProfile from "../../../../hooks/use-profile";
 import {VALID_URL_PATTERN} from "../../../../constants.ts";
 import FormControls from "../../../form-controls";
+import useNotification from "../../../../hooks/use-notification";
 
 interface Props {
     webId?: string | null
@@ -33,6 +34,7 @@ export default function ProfileKnowsEditModal({webId}: Props) {
     });
     const [error, setError] = useState<Error | null>(null);
     const [isSyncing, setIsSyncing] = useState(false);
+    const {notify} = useNotification();
 
     if (error) {
         return <ErrorMessage error={error}/>
@@ -58,6 +60,7 @@ export default function ProfileKnowsEditModal({webId}: Props) {
         setValues({webId: ""});
         setIsSyncing(false);
         closeModal();
+        notify(webId ? <>Updated profile</> : <>Created profile</>)
     }
 
     return <form onSubmit={handleSubmit(onSubmit)} onReset={closeModal} className="box">

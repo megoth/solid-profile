@@ -9,6 +9,7 @@ import {useLdo, useResource, useSolidAuth} from "@ldo/solid-react";
 import {SolidProfileShapeType} from "../../../../ldo/profile.shapeTypes.ts";
 import mime from "mime";
 import FormControls from "../../../form-controls";
+import useNotification from "../../../../hooks/use-notification";
 
 interface Props {
     photoUrl?: string
@@ -39,6 +40,7 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         Container | undefined
     >();
     const photoResource = useResource(photoUrl);
+    const {notify} = useNotification();
 
     useEffect(() => {
         if (!profileResource) return;
@@ -74,12 +76,14 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
             data.photo[0],
             data.photo[0].type
         );
+        notify(<>Uploaded image</>)
         if (!result || result.isError) {
             return setError(new Error(result?.message))
         }
         const fullPhotoUri = container?.uri + newPhotoUri;
         if (photoUrl && photoResource) {
             await photoResource.delete().catch(setError);
+            notify(<>Deleted old photo</>)
             updatedProfile.hasPhoto = (updatedProfile.hasPhoto || []).map((photo: {
                 "@id": string
             }) => photo["@id"] !== photoUrl ? {"@id": fullPhotoUri} : photo);
@@ -90,6 +94,7 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         setValues({photo: null});
         setIsSyncing(false);
         closeModal();
+        notify(<>Updated profile with new photo</>)
     }
 
     return <form onSubmit={handleSubmit(onSubmit)} onReset={closeModal} className="box">

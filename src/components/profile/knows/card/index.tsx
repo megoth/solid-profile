@@ -8,6 +8,7 @@ import useProfile from "../../../../hooks/use-profile";
 import {useLdo} from "@ldo/solid-react";
 import ErrorMessage from "../../../error-message";
 import CardOptions from "../../../card-options";
+import useNotification from "../../../../hooks/use-notification";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode
@@ -20,6 +21,7 @@ export default function ProfileKnowsCard({children, className, webId, ...props}:
     const {closeModal, openModal} = useModal();
     const [isSyncing, setIsSyncing] = useState(false);
     const [error, setError] = useState<Error | null>(null);
+    const {notify} = useNotification();
 
     if (error) {
         return <ErrorMessage error={error}/>
@@ -31,10 +33,13 @@ export default function ProfileKnowsCard({children, className, webId, ...props}:
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
         if (!updatedProfile?.knows) return;
-        updatedProfile.knows = updatedProfile.knows.filter((person) => person["@id"] !== webId);
+        updatedProfile.knows = updatedProfile.knows.filter((person: {
+            "@id": string
+        }) => person["@id"] !== webId);
         await commitData(updatedProfile).catch(setError);
         setIsSyncing(false);
         closeModal();
+        notify("Contact removed");
     }
 
     const handleDeleteInitiation = () => {
@@ -52,7 +57,7 @@ export default function ProfileKnowsCard({children, className, webId, ...props}:
             <div className="card-content">
                 {children}
             </div>
-            {webId && <CardOptions onEdit={handleEditContact} onDelete={handleDeleteInitiation} />}
+            {webId && <CardOptions onEdit={handleEditContact} onDelete={handleDeleteInitiation}/>}
         </div>
     )
 }
