@@ -47,11 +47,14 @@ export default function ProfileKnowsEditModal({webId}: Props) {
         setIsSyncing(true);
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
-        updatedProfile.knows = webId
-            ? (updatedProfile.knows || []).map((person) => person["@id"] === webId
-                ? {"@id": data.webId}
-                : person)
-            : [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
+        if (webId) {
+            updatedProfile.knows = updatedProfile.knows
+                .map((person: {
+                    "@id": string
+                }) => person["@id"] === webId ? {"@id": data.webId} : person);
+        } else {
+            updatedProfile.knows = [...updatedProfile.knows?.values() || [], {"@id": data.webId}];
+        }
         await commitData(updatedProfile).catch(setError);
         setValues({webId: ""});
         setIsSyncing(false);
@@ -69,6 +72,6 @@ export default function ProfileKnowsEditModal({webId}: Props) {
             </div>
             {errors.webId && <p className="help is-danger">WebID is required</p>}
         </div>
-        <FormControls disabled={isSyncing} />
+        <FormControls disabled={isSyncing}/>
     </form>
 }

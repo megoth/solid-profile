@@ -65,7 +65,7 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         const oldProfile = profile || createData(SolidProfileShapeType, profile?.["@id"]);
         const updatedProfile = changeData(oldProfile, profileResource);
         const newPhotoUri = [
-            data.photo[0].name.replace(/.(\w+)?$/, ""),
+            encodeURIComponent(data.photo[0].name.replace(/.(\w+)?$/, "")),
             crypto.randomUUID(),
             mime.getExtension(data.photo[0].type)
         ].join(".");
@@ -80,10 +80,9 @@ export default function ProfilePhotoEditModal({photoUrl}: Props) {
         const fullPhotoUri = container?.uri + newPhotoUri;
         if (photoUrl && photoResource) {
             await photoResource.delete().catch(setError);
-            updatedProfile.hasPhoto = [
-                ...updatedProfile.hasPhoto.filter((photo) => photo["@id"] !== photoUrl),
-                {"@id": fullPhotoUri}
-            ];
+            updatedProfile.hasPhoto = updatedProfile.hasPhoto.map((photo: {
+                "@id": string
+            }) => photo["@id"] !== photoUrl ? {"@id": fullPhotoUri} : photo);
         } else {
             updatedProfile.hasPhoto = [...updatedProfile.hasPhoto, {"@id": fullPhotoUri}]
         }
